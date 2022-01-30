@@ -25,7 +25,7 @@ impl PasswordParameters {
             lowercase_letters, 
             uppercase_letters, 
             digits,
-            special_characters
+            special_characters,
         }
     }
 
@@ -38,6 +38,7 @@ impl PasswordParameters {
     }
 
     pub fn get_list_of_possible_characters (&self) -> Vec<char> {
+
         let mut out = vec![];
 
         if self.lowercase_letters {
