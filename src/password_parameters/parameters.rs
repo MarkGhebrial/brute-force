@@ -1,5 +1,6 @@
 use super::Combinations;
 
+/// Represents the parameters for a password
 pub struct PasswordParameters {
     pub length: usize,
     pub lowercase_letters: bool,
@@ -9,6 +10,7 @@ pub struct PasswordParameters {
 }
 
 impl PasswordParameters {
+    /// Ask the user for the parameters of a password and return their response
     pub fn prompt_user () -> PasswordParameters {
         use crate::user_input::{
             prompt_for_boolean,
@@ -39,6 +41,8 @@ impl PasswordParameters {
         num_of_possible_chars.pow(self.length as u32)
     }
 
+    /// Return a vector that contains all the valid characters
+    /// for the parameters (self)
     pub fn get_list_of_possible_characters (&self) -> Vec<char> {
 
         let mut out = vec![];
@@ -59,6 +63,8 @@ impl PasswordParameters {
         out
     }
 
+    /// Return an iterator over all possible password combinations
+    /// with the current parameters
     pub fn combinations (&self) -> Combinations {
         Combinations::new(&self)
     }

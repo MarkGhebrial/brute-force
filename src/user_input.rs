@@ -19,6 +19,8 @@ pub fn prompt_for_uint (prompt: &str) -> usize {
     pass_len.unwrap()
 }
 
+/// Ask the user a yes or no question, returning their
+/// response as a boolean
 pub fn prompt_for_boolean (prompt: &str) -> bool {
     let mut out: Option<bool> = None;
     println!("{} (yes/no) ", prompt);

@@ -3,6 +3,10 @@ use super::PasswordParameters;
 
 /// An interator that yields every possible password with
 /// the specified parameters
+/// 
+/// This iterator is looping, so when the last combination
+/// is reached, it will roll back to the first one. (i.e. 
+/// zzzy -> zzzz -> aaaa -> aaab)
 pub struct Combinations {
     current_combo: String,
 
@@ -11,6 +15,8 @@ pub struct Combinations {
 }
 
 impl Combinations {
+    /// Return a new iterator over all possible password combinations
+    /// with the specified parameters
     pub fn new (params: &PasswordParameters) -> Combinations {
         // Start with the first possible character repeated for
         // the length of the password
@@ -36,23 +42,28 @@ impl Combinations {
         }
     }
 
+    /// "Increment" current_combo by one
+    /// 
+    /// This can be though as adding one to a base n number, where
+    /// n is the amount of possible characters that can be used in
+    /// the password and each character is a digit. 
     fn increment (&mut self) {
         let mut out = String::new();
 
         let mut rollover = true; // If the current character "rolls over" to the first one, then the one preceeding it must also be incremented
-        for c in self.current_combo.chars().rev() {
+        for c in self.current_combo.chars().rev() { // Start with the rightmost character
             if rollover {
-                let mut num = *self.tebahpla.get(&c).unwrap();
-                num += 1;
+                let mut num = *self.tebahpla.get(&c).unwrap(); // Get the index of the current char
+                num += 1; // Increment that index (i.e. move the the next char in the list)
 
-                match self.alphabet.get(&num) {
-                    Some(c) => {
-                        out.push(*c);
-                        rollover = false;
+                match self.alphabet.get(&num) { // Get the character for index num
+                    Some(c) => { // If the index is valid, then the character is OK and will simply be replaced
+                        out.push(*c); // Append the new character
+                        rollover = false; // No rollover (z -> a) occured, so the next character does not need to be incremented
                     },
-                    None => {
-                        out.push(*self.alphabet.get(&0).unwrap());
-                        rollover = true; // Overflow into the next character
+                    None => { // If the index is invalid, then is is too high and must be "rolled over" to zero
+                        out.push(*self.alphabet.get(&0).unwrap()); // Append the character at index zero
+                        rollover = true; // Rollover of the current character occured, so the next character must be incremented
                     }
                 }
             } else {
