@@ -1,3 +1,5 @@
+use super::Combinations;
+
 pub struct PasswordParameters {
     pub length: usize,
     pub lowercase_letters: bool,

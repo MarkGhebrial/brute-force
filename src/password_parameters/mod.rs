@@ -1,5 +1,5 @@
 mod parameters;
-use parameters::*;
+pub use parameters::*;
 
 mod combinations;
-use combinations::*;
+pub use combinations::*;

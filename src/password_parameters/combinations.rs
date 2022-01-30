@@ -1,8 +1,9 @@
 use std::collections::HashMap;
+use super::PasswordParameters;
 
 /// An interator that yields every possible password with
 /// the specified parameters
-struct Combinations<'a> {
+pub struct Combinations<'a> {
     params: &'a PasswordParameters,
     current_combo: String
 }
@@ -22,10 +23,11 @@ impl Combinations<'_> {
         }
     }
 
-    fn increment (&self) {
+    fn increment (&mut self) {
         let mut alphabet = HashMap::new();
         let mut tebahpla = HashMap::new();
-        for (i, c) in params.get_list_of_possible_characters().enumerate() {
+        let list_of_chars = self.params.get_list_of_possible_characters();
+        for (i, c) in list_of_chars.iter().enumerate() {
             alphabet.insert(i, c);
             tebahpla.insert(c, i);
         }
@@ -33,18 +35,18 @@ impl Combinations<'_> {
         let mut out = String::new();
 
         let mut rollover = true;
-        for c in current_combo.chars().rev() {
+        for c in self.current_combo.chars().rev() {
             if rollover {
-                let mut num = tebahpla.get(&c).unwrap();
+                let mut num = *tebahpla.get(&c).unwrap();
                 num += 1;
 
                 match alphabet.get(&num) {
                     Some(c) => {
-                        out.push(c);
+                        out.push(**c);
                         rollover = false;
                     },
                     None => {
-                        out.push(alphabet.get(0).unwrap());
+                        out.push(**alphabet.get(&0).unwrap());
                         rollover = true; // Overflow into the next character
                     }
                 }

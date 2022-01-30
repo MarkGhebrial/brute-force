@@ -1,14 +1,13 @@
-use std::io;
 use rand::prelude::*;
 use crate::password_parameters::PasswordParameters;
 
-pub struct Password {
+pub struct Password<'a> {
     pub password: String,
-    pub parameters: PasswordParameters
+    pub parameters: &'a PasswordParameters
 }
 
-impl Password {
-    pub fn new (parameters: PasswordParameters) -> Password {
+impl Password<'_> {
+    pub fn new (parameters: &PasswordParameters) -> Password {
         let possible_characters = parameters.get_list_of_possible_characters();
 
         let mut password = String::new();
@@ -26,17 +25,9 @@ impl Password {
         }
     }
 
-    pub fn brute_force () -> f64 {
+    /*pub fn brute_force () -> f64 {
         //for 
 
         0.0
-    }
+    }*/
 }
-
-/*pub fn generate_password (parameters: &PasswordParameters) -> String {
-
-}*/
-
-
-
-//pub fn prompt_for_password_params () -> PasswordParameters
