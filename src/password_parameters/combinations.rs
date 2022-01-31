@@ -48,7 +48,7 @@ impl Combinations {
     /// n is the amount of possible characters that can be used in
     /// the password and each character is a digit. 
     fn increment (&mut self) {
-        let mut out = String::new();
+        let mut out = String::with_capacity(self.current_combo.len());
 
         let mut rollover = true; // If the current character "rolls over" to the first one, then the one preceeding it must also be incremented
         for c in self.current_combo.chars().rev() { // Start with the rightmost character
