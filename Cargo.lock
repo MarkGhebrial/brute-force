@@ -3,6 +3,13 @@
 version = 3
 
 [[package]]
+name = "brute-force"
+version = "0.1.0"
+dependencies = [
+ "rand",
+]
+
+[[package]]
 name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -24,13 +31,6 @@ name = "libc"
 version = "0.2.115"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0a8d982fa7a96a000f6ec4cfe966de9703eccde29750df2bb8949da91b0e818d"
-
-[[package]]
-name = "my-project"
-version = "0.1.0"
-dependencies = [
- "rand",
-]
 
 [[package]]
 name = "ppv-lite86"
