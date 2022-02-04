@@ -7,6 +7,9 @@ use password_generator::*;
 use user_input::*;
 
 use std::time::Instant;
+use std::io::prelude::*;
+use std::io;
+use std::io::BufWriter;
 
 fn main() {
     // Ask the user for the password's parameters
@@ -33,21 +36,28 @@ fn brute_force (params: &PasswordParameters) {
     let mut attempt_no = 0; // Which number attempt we found the password on
     let mut attempt_time = 0.0; // How long it took
 
+    let mut stdio_buffer = BufWriter::new(io::stdout());
+
     for (i, combo) in params.combinations().enumerate() { // Loop through every possible combination
         let elapsed_time = starting_time.elapsed().as_secs_f64();
 
         // Print some useful information (this it the slowest part of the program)
-        println!(
-            "Trying {} ; Elapsed time: {:.3} seconds ; Attempt no. {} of {} ({:.1} attempts per second)", 
+        stdio_buffer.write(format!(
+            "Trying {} ; Elapsed time: {:.3} seconds ; Attempt no. {} of {} ({:.1} attempts per second)\n", 
             combo, 
             elapsed_time, 
             i, 
             num_of_combos, 
             i as f64 / elapsed_time
-        );
+        ).as_bytes()).unwrap();
+
+        if i % 1000 == 0 {
+            stdio_buffer.flush().unwrap();
+        }
 
         // Check if the guessed password matches the randomly generated one
         if combo == password.password {
+            stdio_buffer.flush().unwrap();
             attempt_no = i;
             attempt_time = elapsed_time;
             break; // Leave the loop
