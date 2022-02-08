@@ -1,6 +1,7 @@
 mod password_parameters;
 mod password_generator;
 mod user_input;
+mod stdout_buffer;
 
 use password_parameters::*;
 use password_generator::*;
@@ -37,14 +38,16 @@ fn brute_force (params: &PasswordParameters) {
         let elapsed_time = starting_time.elapsed().as_secs_f64();
 
         // Print some useful information (this it the slowest part of the program)
-        println!(
-            "Trying {} ; Elapsed time: {:.3} seconds ; Attempt no. {} of {} ({:.1} attempts per second)", 
-            combo, 
-            elapsed_time, 
-            i, 
-            num_of_combos, 
-            i as f64 / elapsed_time
-        );
+        if (i % 1000 == 0) {
+            println!(
+                "Trying {} ; Elapsed time: {:.3} seconds ; Attempt no. {} of {} ({:.1} attempts per second)", 
+                combo, 
+                elapsed_time, 
+                i, 
+                num_of_combos, 
+                i as f64 / elapsed_time
+            );
+        }
 
         // Check if the guessed password matches the randomly generated one
         if combo == password.password {
