@@ -4,7 +4,11 @@ use std::io;
 /// if they provide invalid input
 pub fn prompt_for_uint (prompt: &str) -> usize {
     let mut pass_len: Option<usize> = None;
-    println!("{} ", prompt);
+
+    if prompt.len() > 0 {
+        println!("{} ", prompt);
+    }
+
     while let None = pass_len {
         let mut input = String::new();
         io::stdin().read_line(&mut input).unwrap(); // Read the user's input
@@ -37,4 +41,35 @@ pub fn prompt_for_boolean (prompt: &str) -> bool {
     }
 
     out.unwrap()
+}
+
+/// Present the user with a number of options specified 
+/// in a vector of string references
+pub fn menu_prompt(prompt: &str, options: Vec<&str>) -> usize {
+    println!("{} (0-{})", prompt, options.len() - 1);
+    for (i, s) in options.iter().enumerate() {
+        println!("  {}) {}", i , s);
+    }
+
+    let mut out: Option<usize> = None;
+    while let None = out {
+        let input = prompt_for_uint("");
+        if input < options.len() {
+            out = Some(input);
+        } else {
+            println!("Please enter a number between 0 and {}", options.len() - 1);
+        }
+    }
+
+    out.unwrap()
+}
+
+pub fn prompt_for_string(prompt: &str) -> String {
+    println!("{}", prompt);
+
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).unwrap(); // Read the user's input
+    let input = input.trim(); // Remove whitespace
+
+    input.to_string()
 }

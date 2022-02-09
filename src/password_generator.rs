@@ -1,17 +1,20 @@
 use rand::prelude::*;
-use crate::password_parameters::PasswordParameters;
+use crate::password_parameters::{
+    PasswordParameters,
+    InvalidCharacter,
+};
 
 /// Holds a string and the PasswordParameters struct that
 /// describes it
-pub struct Password<'a> {
+pub struct Password {
     pub password: String,
-    pub parameters: &'a PasswordParameters
+    pub parameters: PasswordParameters
 }
 
-impl Password<'_> {
+impl Password {
     /// Return a new, randomly generated password with the parameters
     /// supplied
-    pub fn new (parameters: &PasswordParameters) -> Password {
+    pub fn random(parameters: PasswordParameters) -> Password {
         let possible_characters = parameters.get_list_of_possible_characters();
 
         let mut password = String::new();
@@ -27,5 +30,12 @@ impl Password<'_> {
             password,
             parameters,
         }
+    }
+
+    pub fn from_str(s: &str) -> Result<Password, InvalidCharacter> {
+        Ok(Password {
+            password: String::from(s),
+            parameters: PasswordParameters::from_str(s)?,
+        })
     }
 }
