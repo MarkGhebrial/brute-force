@@ -17,20 +17,8 @@ fn main() {
         "Memorable password"
     ]);
     match generation_strategy {
-        0 => {
-            println!("Please specify the parameters for the random password");
-            let params = PasswordParameters::prompt_user();
-            password = Some(Password::random(params));
-        }
-        1 => {
-            while let None = password {
-                let user_password = Password::from_str(&prompt_for_string("Please enter a password"));
-                match user_password {
-                    Ok(p) => password = Some(p),
-                    Err(_) => println!("Please try again")
-                };
-            }
-        }
+        0 => password = Some(prompt_random_password()),
+        1 => password = Some(prompt_user_specified_password()),
         2 => println!("Coming soon!"),
         _ => {}
     };
@@ -44,4 +32,27 @@ fn main() {
     } else {
         println!("OK");
     }  
+}
+
+/// Ask the user to specify the parameters for a random 
+/// password, then generate that password
+fn prompt_random_password() -> Password {
+    println!("Please specify the parameters for the random password");
+    let params = PasswordParameters::prompt_user();
+    Password::random(params)
+}
+
+/// Ask the user to input their own password, retrying if
+/// it contains an invalid character
+fn prompt_user_specified_password() -> Password {
+    let mut password: Option<Password> = None;
+
+    while let None = password {
+        let user_password = Password::from_str(&prompt_for_string("Please enter a password:"));
+        match user_password {
+            Ok(p) => password = Some(p),
+            Err(e) => println!("Invalid character '{}'", e.0)
+        };
+    }
+    password.unwrap()
 }

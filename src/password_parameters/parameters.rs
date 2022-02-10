@@ -58,7 +58,7 @@ impl PasswordParameters {
             } else if get_special_characters().contains(&c) {
                 special_characters = true;
             } else {
-                return Err(InvalidCharacter);
+                return Err(InvalidCharacter(c));
             }
         }
 
@@ -108,4 +108,4 @@ impl PasswordParameters {
     }
 }
 
-pub struct InvalidCharacter;
+pub struct InvalidCharacter(pub char);
