@@ -10,9 +10,6 @@ use user_input::*;
 use brute_force::*;
 use common_passwords::*;
 
-// The password generation project, but as a library
-use password_gen_lib::prompt_for_memorable_password;
-
 fn main() {
     // Ask the user how to generate the password
     let generation_strategy = menu_prompt("How would you like to generate a password?", vec![
@@ -37,31 +34,4 @@ fn main() {
     } else {
         println!("OK");
     }  
-}
-
-/// Ask the user to specify the parameters for a random 
-/// password, then generate that password
-fn prompt_random_password() -> Password {
-    println!("Please specify the parameters for the random password");
-    let params = PasswordParameters::prompt_user();
-    Password::random(params)
-}
-
-/// Ask the user to input their own password, retrying if
-/// it contains an invalid character
-fn prompt_user_specified_password() -> Password {
-    retry_until_ok(|| {
-        Password::from_str(&prompt_for_string("Please enter a password:"))
-    }, |error| {
-        println!("Invalid character '{}'", error.0);
-    })
-}
-
-/// Ask the user to generate a memorable password
-fn prompt_memorable_password() -> Password {
-    retry_until_ok(|| {
-        Password::from_str(&prompt_for_memorable_password())
-    }, |error| {
-        println!("Invalid character '{}'", error.0);
-    })
 }
