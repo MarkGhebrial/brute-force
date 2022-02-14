@@ -2,8 +2,6 @@ use crate::Password;
 use crate::get_common_passwords_of_len;
 
 use std::time::Instant;
-use std::sync::mpsc;
-use std::thread;
 
 /// Generate a random password and try to brute-force it, printing
 /// every attempt.
@@ -44,30 +42,4 @@ pub fn brute_force (password: &Password) {
     }
 
     println!("Cracked password '{}' on attempt {} in {:.5} seconds", password.password, attempt_no, attempt_time);
-}
-
-/// Spawn a new thread to brute force a password, returning
-/// a Receiver<Stirng>.
-///
-/// The String in the received tuple is the guesed password
-fn spawn_brute_force_thread(correct_password: &Password, combo_sender: &mpsc::Sender<String>) -> mpsc::Sender<bool> {
-    let combos = correct_password.parameters.combinations();
-
-    let cloned_sender = combo_sender.clone();
-
-    // Mpsc channel to kill the thread. If the sender sends true, then the thread will stop
-    let (kill_sender, kill_reciever) = mpsc::channel();
-
-    thread::spawn(move || {
-        for combo in combos {
-            cloned_sender.send(combo).unwrap();
-
-            match kill_reciever.recv() {
-                Ok(b) => if b { break; },
-                Err(_) => break,
-            };
-        }
-    });
-
-    kill_sender
 }
