@@ -6,6 +6,7 @@ version = 3
 name = "brute-force"
 version = "0.1.0"
 dependencies = [
+ "password_gen_lib",
  "rand",
 ]
 
@@ -31,6 +32,11 @@ name = "libc"
 version = "0.2.115"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0a8d982fa7a96a000f6ec4cfe966de9703eccde29750df2bb8949da91b0e818d"
+
+[[package]]
+name = "password_gen_lib"
+version = "0.1.0"
+source = "git+https://github.com/MarkGhebrial/password_gen_lib#b4094f3974d0b118fa5592dcb9d66b5e243091de"
 
 [[package]]
 name = "ppv-lite86"

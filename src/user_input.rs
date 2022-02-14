@@ -1,5 +1,7 @@
 use std::io;
 
+// TODO: use `retry_until_ok` in more of these functions
+
 /// Ask the user for a positive interger, retrying
 /// if they provide invalid input
 pub fn prompt_for_uint (prompt: &str) -> usize {
@@ -64,6 +66,7 @@ pub fn menu_prompt(prompt: &str, options: Vec<&str>) -> usize {
     out.unwrap()
 }
 
+/// Ask the user to input a string
 pub fn prompt_for_string(prompt: &str) -> String {
     println!("{}", prompt);
 
@@ -72,4 +75,23 @@ pub fn prompt_for_string(prompt: &str) -> String {
     let input = input.trim(); // Remove whitespace
 
     input.to_string()
+}
+
+/// Keep running the given closure until it returns `Result::Ok<T>`.
+/// 
+/// Every time `action` returns an `Err` (generic `E`), the closure
+/// `handle_err` will be run with the error passed as a prameter.
+pub fn retry_until_ok<F, T, E, H>(action: F, handle_error: H) -> T 
+    where 
+        F: Fn() -> Result<T, E>, 
+        H: Fn(E)
+{
+    let mut out: Option<T> = None;
+    while let None = out {
+        match action() {
+            Ok(v) => out = Some(v),
+            Err(e) => handle_error(e)
+        }
+    }
+    out.unwrap()
 }

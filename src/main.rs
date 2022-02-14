@@ -10,22 +10,25 @@ use user_input::*;
 use brute_force::*;
 use common_passwords::*;
 
-fn main() {
-    let mut password: Option<Password> = None;
+// The password generation project, but as a library
+use password_gen_lib::prompt_for_memorable_password;
 
+fn main() {
+    // Ask the user how to generate the password
     let generation_strategy = menu_prompt("How would you like to generate a password?", vec![
         "Randomly generated",
         "User specified",
         "Memorable password"
     ]);
-    match generation_strategy {
-        0 => password = Some(prompt_random_password()),
-        1 => password = Some(prompt_user_specified_password()),
-        2 => println!("Coming soon!"),
-        _ => {}
-    };
 
-    let password = password.unwrap();
+    // Generate the password based on the user-specified strategy
+    let password = match generation_strategy {
+        0 => Some(prompt_random_password()),
+        1 => Some(prompt_user_specified_password()),
+        2 => Some(prompt_memorable_password()),
+        _ => None // This case should never happen...
+    };
+    let password = password.unwrap(); // ...so we can panic if it does
 
     let num_of_combos = &password.parameters.num_of_possible_combos();
 
@@ -47,14 +50,18 @@ fn prompt_random_password() -> Password {
 /// Ask the user to input their own password, retrying if
 /// it contains an invalid character
 fn prompt_user_specified_password() -> Password {
-    let mut password: Option<Password> = None;
+    retry_until_ok(|| {
+        Password::from_str(&prompt_for_string("Please enter a password:"))
+    }, |error| {
+        println!("Invalid character '{}'", error.0);
+    })
+}
 
-    while let None = password {
-        let user_password = Password::from_str(&prompt_for_string("Please enter a password:"));
-        match user_password {
-            Ok(p) => password = Some(p),
-            Err(e) => println!("Invalid character '{}'", e.0)
-        };
-    }
-    password.unwrap()
+/// Ask the user to generate a memorable password
+fn prompt_memorable_password() -> Password {
+    retry_until_ok(|| {
+        Password::from_str(&prompt_for_memorable_password())
+    }, |error| {
+        println!("Invalid character '{}'", error.0);
+    })
 }

@@ -8,3 +8,4 @@ edition = "2021"
 
 [dependencies]
 rand = "0.8.4"
+password_gen_lib = { git = "https://github.com/MarkGhebrial/password_gen_lib" } # The password generation project, but as a library
