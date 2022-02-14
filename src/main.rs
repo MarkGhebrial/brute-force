@@ -2,11 +2,13 @@ mod password_parameters;
 mod password_generator;
 mod user_input;
 mod brute_force;
+mod common_passwords;
 
 use password_parameters::*;
 use password_generator::*;
 use user_input::*;
 use brute_force::*;
+use common_passwords::*;
 
 fn main() {
     let mut password: Option<Password> = None;

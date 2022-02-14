@@ -108,4 +108,5 @@ impl PasswordParameters {
     }
 }
 
+/// Returned when the user inputs a password with an unsupported character (like a space)
 pub struct InvalidCharacter(pub char);

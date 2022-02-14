@@ -1,5 +1,5 @@
 use crate::Password;
-use crate::Combinations;
+use crate::get_common_passwords_of_len;
 
 use std::time::Instant;
 use std::sync::mpsc;
@@ -17,7 +17,12 @@ pub fn brute_force (password: &Password) {
     let mut attempt_no = 0; // Which number attempt we found the password on
     let mut attempt_time = 0.0; // How long it took
 
-    for (i, combo) in params.combinations().enumerate() { // Loop through every possible combination
+    // Create an iterator to loop over the common password list and all possible passwords
+    let password_iterator = get_common_passwords_of_len(params.length)
+        .into_iter()
+        .chain(params.combinations());
+
+    for (i, combo) in password_iterator.enumerate() { // Loop through every possible combination
         let elapsed_time = starting_time.elapsed().as_secs_f64();
 
         // Print some useful information (this it the slowest part of the program)
